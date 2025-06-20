@@ -1,0 +1,2 @@
+ & 'd:\anaconda\python.exe' 'c:\Users\徐容圣\.vscode\extensions\ms-python.debugpy-2025.8.0-win32-x64\bundled\libs\debugpy\launcher' '54777' '--' 'E:\RA_FPGA\nonuniform_phased_array\matlab\python_file\regression.py' 
+conda activate base
