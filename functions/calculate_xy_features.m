@@ -29,6 +29,7 @@ function ln = calculate_xy_features(element_index, all_coords, N, large_element_
 %     [sorted_r, sort_idx] = sort(r);
 %     coord2 = relative_coords_cart(sort_idx(1:N), :);
     % 组合特征: 绝对位置 + 相对位置倒数 + 大尺寸单元位置
-    ln = [coord1]; % 列向量形式
-    ln = ln(:);
+    ln = coord1.'; % 列向量形式
+    % ln = ln(:);
+    % N*2
 end

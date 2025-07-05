@@ -1,0 +1,12 @@
+// {
+//     "version": "0.2.0",
+//     "configurations": [
+//         {
+//             "name": "Python: 当前文件", // 这是配置的名称
+//             "type": "python",          // 必须是 "python"
+//             "request": "launch",       // 必须是 "launch"
+//             "program": "${file}",      // 关键！这代表调试当前打开的文件
+//             "console": "integratedTerminal", // 建议设为这个，可以在终端看到输出
+//         }
+//     ]
+// }

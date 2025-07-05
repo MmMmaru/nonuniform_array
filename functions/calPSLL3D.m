@@ -1,5 +1,6 @@
-function [PSLL, Gain] = calPSLL3D(points, thetaScanDeg, phiScanDeg, f0, Lx, Ly, G_mag_all, angles_uv)
+function [PSLL, Gain] = calPSLL3D(points, thetaScanDeg, phiScanDeg, f0, Lx, Ly, Gn, angles_uv)
 % 物理量
+% 输入points 单位为mm
 
     c0 = 3*1e8;
     lambda0 = c0/(f0);
@@ -16,19 +17,20 @@ function [PSLL, Gain] = calPSLL3D(points, thetaScanDeg, phiScanDeg, f0, Lx, Ly, 
     
     % 生成uv
 
-    u = angles_uv(:,1);
-    v = angles_uv(:,2);
-    [U_grid,V_grid] = meshgrid(linspace(-1,1,101), linspace(1,-1,101));
+    % u = angles_uv(:,1);
+    % v = angles_uv(:,2);
+    grid_points = 64;
+    [U_grid,V_grid] = meshgrid(linspace(-1,1,grid_points), linspace(1,-1,grid_points));
     % 扫描角
     F = zeros(size(U_grid, 1),size(U_grid, 2));
     u0 = [sind(thetaScanDeg)*cosd(phiScanDeg), sind(thetaScanDeg)*sind(phiScanDeg), 0];
-    warning('off', 'MATLAB:griddata:DuplicateDataPoints');
+    warning('off');
     for n = 1:N
         rn = [points(n,:),0];
 
 %         Gn_ = scatteredInterpolant(u, v, G_mag_all(:, n), 'natural'); % 备选插值方法
 %         Gn = Gn_(U_grid, V_grid);
-        Gn = griddata(u, v, G_mag_all(:, n), U_grid, V_grid, 'natural');
+        % Gn = griddata(u, v, G_mag_all(:, n), U_grid, V_grid, 'natural');
         An = Gn ;
         phase_n = k0 * (-dot(rn, u0));
         F = F + An .* exp(1j * k0 * (rn(1) * U_grid + rn(2) * V_grid) + 1j * phase_n);
