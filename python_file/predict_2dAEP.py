@@ -147,11 +147,11 @@ def predict_2matlab():
     mat = scipy.io.loadmat('python_file/X_set.mat')
     x = mat['X_set']
     x = torch.FloatTensor(x)  # Convert to torch tensor.
-    model = mymodel(input_dim=x.shape[1], ngf=64, output_feature=1024, output_dim=(4, 64, 64), dropout=0).to('cuda') # Initialize your model.
-    model_path = 'python_file/models/model.ckpt' # Path to your saved model.
-    model.load_state_dict(torch.load(model_path)) # Load your saved model.
+    model = mymodel(input_dim=x.shape[1], ngf=128, output_feature=1024, output_dim=(4, 64, 64), dropout=0).to('cuda') # Initialize your model.
+    model_path = 'python_file/models/model500.ckpt' # Path to your saved model.
+    model.load_state_dict(torch.load(model_path)) # Load your saved model.  
 
-    dataset = myDataset(x)  # Create dataset.
+    dataset = myDataset(x)  # Create dataset.   
     test_loader = DataLoader(dataset, batch_size=256, shuffle=False, pin_memory=True) # Create data loader.
     preds = predict(test_loader, model, device)  # Predict using your model.
     scipy.io.savemat('python_file/preds.mat', {'YPred': preds}) # Save predictions to a .mat file.
@@ -163,12 +163,15 @@ config = {
     'select_all': True,   # Whether to use all features.
     'valid_ratio': 0.1,   # validation_size = train_size * valid_ratio
     'n_epochs': 200,     # Number of epochs.            
-    'batch_size': 256, 
+    'batch_size': 64, 
     'learning_rate': 1e-3,              
     'patience': 100,      # If model has not improved for this many consecutive epochs, reduce learning rate.
     'early_stop': 50,    # If model has not improved for this many consecutive epochs, stop training.     
     'save_path': './models/model.ckpt',  # Your model will be saved here.
-    'hidden_dim': 64
+    'hidden_dim': 128,  # Hidden dimension of your model.
+    'kernal_size': 4,  # Kernel size of your model.
+    'ngf': 128,  # Number of generator filters in the first layer.
+    'output_feature': 1024,  # Output feature of your model.
 }
 
 def main():
@@ -215,7 +218,7 @@ def main():
     # model = image2sequence(input_dim=XTrain.shape[1], output_dim=YTrain.shape[1], hidden_dim=hidden_dim).to(device) # Initialize your model.
     # model = sequence2sequence(input_dim=XTrain.shape[1], output_dim=YTrain.shape[1], hidden_dim=hidden_dim, dropout=0.2).to(device)
     # model = MLPS(input_dim, output_dim, hidden_dim=hidden_dim, dropout=0.2).to(device)
-    model = mymodel(input_dim, 128, 1024, output_dim, 0).to(device) # Initialize your model.
+    model = mymodel(input_dim, 128, 1024, 4, output_dim, 0).to(device) # Initialize your model.
     train_loss, valid_loss = trainer(train_loader, valid_loader, model, config, device) # Train your model.
     # preds = unstanderize2d(torch.FloatTensor(preds_standerize), YValidation_main, YValidation_std) # Unstandardize predictions.
     # scipy.io.savemat('preds.mat', {'preds': preds}) # Save predictions to a .mat file.
@@ -285,4 +288,5 @@ if __name__ == '__main__':
 # 0.2 
 # 0.5
 
+# pixel norm
 # 

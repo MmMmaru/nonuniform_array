@@ -90,7 +90,7 @@ class MLPS(nn.Module):
         return x
 
 class Generator(nn.Module):
-    def __init__(self, input_dim, ngf=64, output_dim=3, dropout=0):
+    def __init__(self, input_dim, ngf, kernal_size, output_dim, dropout=0):
         """
         DCGAN 生成器
         
@@ -102,7 +102,7 @@ class Generator(nn.Module):
         super(Generator, self).__init__()
         self.ngf = ngf  # 基础特征图深度
         output_dim = output_dim[0] # [C,H,W]
-        self.kernal_size = 4  
+        self.kernal_size = kernal_size
         self.padding = int((self.kernal_size - 1) / 2) 
 
         self.l1 = nn.Sequential(
@@ -169,10 +169,10 @@ class Generator(nn.Module):
         return output
 
 class mymodel(nn.Module):
-    def __init__(self, input_dim, ngf, output_feature, output_dim, dropout=0):
+    def __init__(self, input_dim, ngf, output_feature, kernal_size, output_dim, dropout=0):
         super(mymodel, self).__init__()
         self.feat = PointNetEncoder(output_feature, global_feat=True, feature_transform=False, channel=2)
-        self.generator = Generator(output_feature, ngf, output_dim, dropout)
+        self.generator = Generator(output_feature, ngf, kernal_size, output_dim,  dropout)
     
     def forward(self, x):
         x = self.feat(x)

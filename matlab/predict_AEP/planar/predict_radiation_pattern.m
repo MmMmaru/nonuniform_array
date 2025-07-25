@@ -1,4 +1,5 @@
 %% data preprocess
+clear classes
 dataFolder = 'dataset/planar_cp_dataset/';  % 你的数据目录
 filename = sprintf(dataFolder + "Gn_%d", 500);
 load(filename + ".mat");
@@ -57,9 +58,7 @@ for j = 1:N_elements
     Y_set(k, :, :, :) = G_;
     k = k+1;
 end
-
-
-%% predict AEP
+% predict AEP
 K = 2; M = 16;
 Rc_train = 1*15;
 % ln_all = zeros(K*M + 2, N_elements);
@@ -76,14 +75,14 @@ if count(py.sys.path,py_folder) == 0
     insert(py.sys.path,int32(0),py_folder);
 end
 folder = "python_file\";
-save(folder + "X_set.mat", "X_set");
-% py.importlib.import_module("predict_2dAEP.py");
-% py.importlib.reload(mod);
-% py.predict_2dAEP.predict_2matlab();
-pyrunfile("predict_2dAEP.py");
-load(folder + 'preds.mat');
+save(folder + "X_set.mat", "X_set");        
+mod = py.importlib.import_module("predict_2dAEP");
+py.importlib.reload(mod);   
+py.predict_2dAEP.predict_2matlab();
+% pyrunfile("predict_2dAEP.py");
+load(folder + 'preds.mat'); 
 %% show pred results
-n = 1;
+n = 5;
 points = model_points{1};
 figure (1);
 scatter(points(:,1), points(:,2), 200, '.', 'b');
